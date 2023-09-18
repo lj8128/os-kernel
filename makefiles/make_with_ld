@@ -1,0 +1,10 @@
+all: $(base_name)
+ 
+$(base_name).o: $(base_name).s
+	as --32 -o $(base_name).o $(base_name).s
+
+$(base_name): $(base_name).o
+	ld -m elf_i386 -o $(base_name) $(base_name).o
+
+clean:
+	rm -f $(base_name).o $(base_name)  

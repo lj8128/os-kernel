@@ -1,0 +1,17 @@
+hfs = hello_from_subroutine
+sp = subr_print
+
+all: $(hfs) 
+
+$(hfs).o: $(hfs).s
+	as --32 -gstabs+ -o $(hfs).o $(hfs).s
+
+$(sp).o: $(sp).s
+	as --32 -gstabs+ -o $(sp).o $(sp).s
+
+$(hfs): $(hfs).o $(sp).o
+	ld -m elf_i386 -o $(hfs) $(hfs).o $(sp).o
+
+clean:
+	rm -f $(hfs).o $(sp).o $(hfs)
+
