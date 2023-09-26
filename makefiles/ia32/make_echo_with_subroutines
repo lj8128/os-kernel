@@ -1,0 +1,20 @@
+ews = echo_with_subroutines
+sr = subr_read
+sp = subr_print
+
+all: $(ews)
+
+$(ews).o: $(ews).s
+	as --32 -gstabs+ -o $(ews).o $(ews).s
+
+$(sr).o: $(sr).s
+	as --32 -gstabs+ -o $(sr).o $(sr).s
+
+$(sp).o: $(sp).s
+	as --32 -gstabs+ -o $(sp).o $(sp).s
+
+$(ews): $(ews).o $(sr).o $(sp).o
+	ld -m elf_i386 -o $(ews) $(ews).o $(sr).o $(sp).o
+
+clean:
+	rm -f $(ews).o $(sr).o $(sp).o $(ews)
