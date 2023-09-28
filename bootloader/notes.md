@@ -51,7 +51,7 @@ this is even done remotely these days, as can be witnessed in the
 screenshot below, where the BIOS of a Dell computer is being updated
 with BIOS Guard. 
 
-![Dell BIOS Update](dell-firmware-update.webp "Dell BIOS update")
+[insert image, if copyright permits]
 
 This image was actually taken by [a concerned owner](https://www.reddit.com/r/Dell/comments/pg8vxs/is_this_normal_for_dell_to_issue_an_over_the_air/) who thought it was 
 strange to have the firmware updated remotely. Others also [shared the
