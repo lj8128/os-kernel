@@ -28,8 +28,8 @@ formats, which means the bootloader's instructions no longer need to be
 compiled in raw binary machine code.
 
 We will further discuss some of these comparative advantages of the 
-UEFI below in passing. But we will completely neglect the problem of
-how a bootloader might be written to interface with a UEFI firmware.
+UEFI below in passing. But we will neglect the problem of how a 
+bootloader might be written to interface with a UEFI firmware.
 
 ## Preliminaries: The BIOS
 
@@ -78,7 +78,8 @@ In this model, when we want to write to or read from a memory address
 `L`, we do so by specifying:
 
 1. an address `A`, where `A <= L`; and
-2. `L - A`, which is the number of bytes we have to `A` to reach `L`.
+2. `L - A`, which is the number of bytes we must add to `A` to reach 
+`L`.
 
 We might call the first the 'base address' from which we begin our
 memory access. As for the second, it's usually called the 'offset'.
@@ -138,6 +139,34 @@ normally;
 3. searches for and loads a boot sector.
 
 #### The Interrupt Vector Table
+
+The Interrupt Vector Table, roughly speaking, is a list of memory
+locations that the BIOS loads into RAM. The first location in the list
+is assigned the number 0, the second location, the number 1, and so on,
+until the 256-th location is given the number 255. These numbers are
+called _interrupt vectors_.
+
+Each memory location corresponds to the starting address of a routine,
+or _interrupt handler_. These routines can be invoked either directly
+or indirectly. They can be invoked directly by an interrupt instruction
+issued in assembly. More specifically, we can append an interrupt
+vector to an `int` instruction, in order to invoke the routine stored 
+at the memory location corresponding to that vector. For example, 
+`int 0x0` would run the routine stored at the first memory location, 
+which has the interrupt vector 0.
+
+On the other hand, interrupts can also be invoked indirectly. For
+example, if we attempt to divide by 0, the interrupt routine with
+vector 0x0 is invoked by the CPU. This response by the CPU is something
+that has been hardwired, i.e., implemented in the CPU's hardware. Thus,
+certain operations are such that executing them would cause the CPU to
+automatically invoke an interrupt handler. When the operation is
+considered to be an error, the operations are _exceptions_ and the
+interrupt handler is called an _exception handler_.
+
+4 bytes, segment selector + offset, 255, so 1024 bytes, or 1 kilobyte.
+Stored from memory location 0.
+
 
 #### Loading the Boot Sector 
 
