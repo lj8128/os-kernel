@@ -101,9 +101,7 @@ a string, defined at an offset of 8 bytes from the start of the
 program. Then, we might store the value `0x7c0` in the `ds` register
 (since `0x7c0 == 0x7c00 / 0x10`, where `0x10` equals decimal 16), and 
 use the offset to access our data, such that, if `L` is the location of 
-our data,
-
-`L == ds * 0x10 + 0x8`.
+our data, `L == ds * 0x10 + 0x8`.
 
 Alternatively, suppose that we have two routines, `R1` and `R2`, and we 
 don't want them to share the same memory space. Then we can assign one
@@ -140,11 +138,11 @@ normally;
 
 #### The Interrupt Vector Table
 
-The Interrupt Vector Table, roughly speaking, is a list of memory
-locations that the BIOS loads into RAM. The first location in the list
-is assigned the number 0, the second location, the number 1, and so on,
-until the 256-th location is given the number 255. These numbers are
-called _interrupt vectors_.
+The Interrupt Vector Table (hereafter, 'IVT'), roughly speaking, is a 
+list of memory locations that the BIOS loads into RAM. The first 
+location in the list is assigned the number 0, the second location, the 
+number 1, and so on, until the 256-th location is given the number 255. 
+These numbers are called _interrupt vectors_.
 
 Each memory location corresponds to the starting address of a routine,
 or _interrupt handler_. These routines can be invoked either directly
@@ -164,9 +162,20 @@ automatically invoke an interrupt handler. When the operation is
 considered to be an error, the operations are _exceptions_ and the
 interrupt handler is called an _exception handler_.
 
-4 bytes, segment selector + offset, 255, so 1024 bytes, or 1 kilobyte.
-Stored from memory location 0.
+We've described the entries of the IVT as memory locations. But more 
+precisely, each entry is a pair consisting of a 2-byte segment selector 
+and a 2-byte offset. Say, then, that we are considering the third
+entry, corresponding to the interrupt vector 2, and the handler `h` 
+that would be invoked if we execute `int 0x2`. To obtain the starting 
+address of `h`, then, where `s` is  the segment selector and `o` is the 
+offset, we could calculate: `s * 16 + o`.
 
+Thus, every entry in the IVT takes up 4 bytes. And since we have 256 of 
+these entries, the table as a whole occupies 1024 bytes, or 1 kilobyte 
+of memory. The BIOS loads this kilobyte from the memory address 0x0, 
+with the entry for interrupt vector 0 at 0x0, the entry for interrupt 
+vector 1 at 0x4, and so on. Thus, the first 1024 bytes of RAM are 
+occupied by the IVT.
 
 #### Loading the Boot Sector 
 
@@ -186,21 +195,10 @@ device as a boot sector, it loads the 512 bytes of the sector into
 memory, starting at the address `0x7c00`. The CPU then starts executing
 the bootloader from that address.
 
-One last crucial function of the bootloader is that it initializes an
-interrupt vector table, mapping interrupts to... 
-
-
-As we will see, it also supports an interrupt vector table,
-much like an OS does, such that we can issue what are effectively
-system-call interrupts from the bootloader, which the BIOS will then 
-proceed to handle.   
-
 Thus, the BIOS is the loader that loads the bootloader. The bootloader
-is called a 'loader' because it, in turn, will load the operating
+is called a 'loader' because it, in turn, will load the operating 
 system kernel.
 
 ## The Bootloader
 
-Describe how the bootloader written for PeachOS works. The main object
-of the assembler is to assemble a 512-mb stretch of binary code that
-fits into the boot sector. 
+
