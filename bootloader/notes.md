@@ -126,7 +126,7 @@ Protected mode offers a 32-bit, and long mode a 64-bit, instruction
 set. And both offer much larger memory usage than real mode, with long
 mode offering more than protected mode.
 
-### Loading the Bootloader: What the BIOS Does
+### What the BIOS Does
 
 To return to the BIOS itself, the program does several things, but most
 prominently, it:
@@ -134,8 +134,12 @@ prominently, it:
 1. runs a Power-On Self-Test, or POST, which checks to ensure that the
 core hardware of the computer (the processor, RAM, etc.) is functioning 
 normally; 
-2. searches for a boot sector; and
-3. initializes an interrupt vector table.
+2. initializes an interrupt vector table; and
+3. searches for and loads a boot sector.
+
+#### The Interrupt Vector Table
+
+#### Loading the Boot Sector 
 
 A sector is a section of a storage device, such as a floppy disk, 
 CD-ROM, hard drive, etc. A boot sector is a 512-byte-large sector, the
@@ -156,7 +160,6 @@ the bootloader from that address.
 One last crucial function of the bootloader is that it initializes an
 interrupt vector table, mapping interrupts to... 
 
->-reference chatgpt response-<
 
 As we will see, it also supports an interrupt vector table,
 much like an OS does, such that we can issue what are effectively
